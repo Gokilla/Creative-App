@@ -8,11 +8,14 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Entity\Movie;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use GuzzleHttp\Psr7\Request;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Log\LoggerInterface;
+use SimpleXMLElement;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputArgument;
@@ -77,10 +80,11 @@ class FetchDataCommand extends Command
     }
 
     /**
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
      *
      * @return int
+     * @throws Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -115,11 +119,11 @@ class FetchDataCommand extends Command
     /**
      * @param string $data
      *
-     * @throws \Exception
+     * @throws Exception
      */
     protected function processXml(string $data): void
     {
-        $xml = (new \SimpleXMLElement($data))->children();
+        $xml = (new SimpleXMLElement($data))->children();
 //        $namespace = $xml->getNamespaces(true)['content'];
 //        dd((string) $xml->channel->item[0]->children($namespace)->encoded);
 
@@ -143,13 +147,13 @@ class FetchDataCommand extends Command
     /**
      * @param string $date
      *
-     * @return \DateTime
+     * @return DateTime
      *
-     * @throws \Exception
+     * @throws Exception
      */
-    protected function parseDate(string $date): \DateTime
+    protected function parseDate(string $date): DateTime
     {
-        return new \DateTime($date);
+        return new DateTime($date);
     }
 
     /**
