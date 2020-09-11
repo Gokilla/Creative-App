@@ -36,10 +36,6 @@ class HomeController
 
     /**
      * HomeController constructor.
-     *
-     * @param RouteCollectorInterface $routeCollector
-     * @param Environment             $twig
-     * @param EntityManagerInterface  $em
      */
     public function __construct(RouteCollectorInterface $routeCollector, Environment $twig, EntityManagerInterface $em)
     {
@@ -49,11 +45,6 @@ class HomeController
     }
 
     /**
-     * @param ServerRequestInterface $request
-     * @param ResponseInterface      $response
-     *
-     * @return ResponseInterface
-     *
      * @throws HttpBadRequestException
      */
     public function index(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
@@ -72,8 +63,26 @@ class HomeController
     }
 
     /**
-     * @return Collection
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     * @return ResponseInterface
+     * @throws HttpBadRequestException
      */
+    public function show(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
+    {
+        try {
+            $data = $this->twig->render('home/view.html.twig', [
+                'trailer' => $this->em->getRepository(Movie::class)->findOneBy(['slug' => $request->getAttribute('slug')]),
+            ]);
+        } catch (\Exception $e) {
+            throw new HttpBadRequestException($request, $e->getMessage(), $e);
+        }
+
+        $response->getBody()->write($data);
+
+        return $response;
+    }
+
     protected function fetchData(): Collection
     {
         $data = $this->em->getRepository(Movie::class)
