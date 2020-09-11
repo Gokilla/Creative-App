@@ -110,7 +110,6 @@ class FetchDataCommand extends Command
         }
         $data = $response->getBody()->getContents();
         $this->processXml($data);
-
         $this->logger->info(sprintf('End %s at %s', __CLASS__, (string) date_create()->format(DATE_ATOM)));
 
         return 0;
@@ -124,13 +123,12 @@ class FetchDataCommand extends Command
     protected function processXml(string $data): void
     {
         $xml = (new SimpleXMLElement($data))->children();
-//        $namespace = $xml->getNamespaces(true)['content'];
-//        dd((string) $xml->channel->item[0]->children($namespace)->encoded);
-
         if (!property_exists($xml, 'channel')) {
             throw new RuntimeException('Could not find \'channel\' element in feed');
         }
+        $i = 0;
         foreach ($xml->channel->item as $item) {
+            if(++$i > 10) break;
             $trailer = $this->getMovie((string) $item->title)
                 ->setTitle((string) $item->title)
                 ->setDescription((string) $item->description)
