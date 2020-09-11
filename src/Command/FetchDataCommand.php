@@ -57,11 +57,6 @@ class FetchDataCommand extends Command
 
     /**
      * FetchDataCommand constructor.
-     *
-     * @param ClientInterface        $httpClient
-     * @param LoggerInterface        $logger
-     * @param EntityManagerInterface $em
-     * @param string|null            $name
      */
     public function __construct(ClientInterface $httpClient, LoggerInterface $logger, EntityManagerInterface $em, string $name = null)
     {
@@ -80,10 +75,6 @@ class FetchDataCommand extends Command
     }
 
     /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     *
-     * @return int
      * @throws Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -116,8 +107,6 @@ class FetchDataCommand extends Command
     }
 
     /**
-     * @param string $data
-     *
      * @throws Exception
      */
     protected function processXml(string $data): void
@@ -128,7 +117,9 @@ class FetchDataCommand extends Command
         }
         $i = 0;
         foreach ($xml->channel->item as $item) {
-            if(++$i > 10) break;
+            if (++$i > 10) {
+                break;
+            }
             $trailer = $this->getMovie((string) $item->title)
                 ->setTitle((string) $item->title)
                 ->setDescription((string) $item->description)
@@ -143,10 +134,6 @@ class FetchDataCommand extends Command
     }
 
     /**
-     * @param string $date
-     *
-     * @return DateTime
-     *
      * @throws Exception
      */
     protected function parseDate(string $date): DateTime
@@ -154,11 +141,6 @@ class FetchDataCommand extends Command
         return new DateTime($date);
     }
 
-    /**
-     * @param string $title
-     *
-     * @return Movie
-     */
     protected function getMovie(string $title): Movie
     {
         $item = $this->doctrine->getRepository(Movie::class)->findOneBy(['title' => $title]);
