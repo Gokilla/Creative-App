@@ -126,6 +126,7 @@ class FetchDataCommand extends Command
                 ->setLink((string) $item->link)
                 ->setPubDate($this->parseDate((string) $item->pubDate))
                 ->setImage((string) $item->link . '/images/poster.jpg')
+                ->setSlug((string) $item->title)
             ;
 
             $this->doctrine->persist($trailer);
