@@ -55,9 +55,10 @@ final class Movie
      * @ORM\Column(nullable=true)
      */
     private $image;
+
     /**
      * @var string|null
-     * @ORM\Column(nullable=true)
+     * @ORM\Column(type="text",nullable=true)
      */
     private $slug;
 
