@@ -7,8 +7,10 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Index;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\MovieRepository")
@@ -43,7 +45,7 @@ final class Movie
     private $description;
 
     /**
-     * @var \DateTime|null
+     * @var DateTime|null
      * @ORM\Column(type="datetime", name="pub_date")
      */
     private $pubDate;
@@ -53,10 +55,12 @@ final class Movie
      * @ORM\Column(nullable=true)
      */
     private $image;
-
     /**
-     * @return string|null
+     * @var string|null
+     * @ORM\Column(nullable=true)
      */
+    private $slug;
+
     public function getImage(): ?string
     {
         return $this->image;
@@ -64,7 +68,6 @@ final class Movie
 
     /**
      * @param string|null $image
-     *
      * @return Movie
      */
     public function setImage(?string $image): self
@@ -74,17 +77,11 @@ final class Movie
         return $this;
     }
 
-    /**
-     * @return int|null
-     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return string|null
-     */
     public function getTitle(): ?string
     {
         return $this->title;
@@ -92,7 +89,6 @@ final class Movie
 
     /**
      * @param string|null $title
-     *
      * @return Movie
      */
     public function setTitle(?string $title): self
@@ -102,9 +98,6 @@ final class Movie
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getLink(): ?string
     {
         return $this->link;
@@ -112,7 +105,6 @@ final class Movie
 
     /**
      * @param string|null $link
-     *
      * @return Movie
      */
     public function setLink(?string $link): self
@@ -122,9 +114,6 @@ final class Movie
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getDescription(): ?string
     {
         return $this->description;
@@ -132,7 +121,6 @@ final class Movie
 
     /**
      * @param string|null $description
-     *
      * @return Movie
      */
     public function setDescription(?string $description): self
@@ -142,23 +130,38 @@ final class Movie
         return $this;
     }
 
-    /**
-     * @return \DateTime|null
-     */
-    public function getPubDate(): ?\DateTime
+    public function getPubDate(): ?DateTime
     {
         return $this->pubDate;
     }
 
     /**
-     * @param \DateTime|null $pubDate
-     *
+     * @param DateTime|null $pubDate
      * @return Movie
      */
-    public function setPubDate(?\DateTime $pubDate): self
+    public function setPubDate(?DateTime $pubDate): self
     {
         $this->pubDate = $pubDate;
 
         return $this;
+    }
+
+    /**
+     * method to generate slug by title.
+     *
+     * @param string|null $title
+     * @return Movie
+     */
+    public function setSlug(?string $title): self
+    {
+        $slugger = new AsciiSlugger();
+        $this->slug = $slugger->slug($title);
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
     }
 }
