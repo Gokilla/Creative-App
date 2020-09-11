@@ -4,13 +4,14 @@
 
 {% block content %}
     <div class="container">
-        <h1 class="mt-5 mb-4">{{ trailers | length }} iTunes Movie trailers</h1>
-        <table class="table table-bordered">
+        <h1 class="mt-5 mb-4">{{ trailers | length }} iTu3nes Movie trailers</h1>
+        <div class="row">
             {% for trailer in trailers %}
-                <tr>
-                    <td>{{ trailer.title }}</td>
-                </tr>
+                <div class="col-md-4">
+                    <img src="{{ trailer.image }}" class="posters"/>
+                    <h5 style="">{{ trailer.title }}</h5>
+                </div>
             {% endfor %}
-        </table>
+        </div>
     </div>
 {% endblock %}
